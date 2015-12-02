@@ -124,13 +124,13 @@ prompt_pure_preprompt_render() {
 	[[ -n ${prompt_pure_cmd_timestamp+x} && "$1" != "precmd" ]] && return
 
 	# set color for git branch/dirty status, change color if dirty checking has been delayed
-	local git_color=242
-	[[ -n ${prompt_pure_git_last_dirty_check_timestamp+x} ]] && git_color=red
+	# local git_color=242
+	# [[ -n ${prompt_pure_git_last_dirty_check_timestamp+x} ]] && git_color=red
 
 	# construct preprompt, beginning with path
 	local preprompt="%F{blue}%~%f"
 	# git info
-	preprompt+="%F{$git_color}${vcs_info_msg_0_}${prompt_pure_git_dirty}%f"
+	preprompt+="%F{green}${prompt_pure_git_dirty}${vcs_info_msg_0_}"
 	# git pull/push arrows
 	preprompt+="%F{cyan}${prompt_pure_git_arrows}%f"
 	# username and machine if applicable
@@ -231,7 +231,7 @@ prompt_pure_async_git_dirty() {
 		test -z "$(command git status --porcelain --ignore-submodules -unormal)"
 	fi
 
-	(( $? )) && echo "*"
+	(( $? )) && echo "%F{red}"
 }
 
 prompt_pure_async_git_fetch() {
@@ -345,7 +345,9 @@ prompt_pure_setup() {
 	[[ $UID -eq 0 ]] && prompt_pure_username=' %F{white}%n%f%F{242}@%m%f'
 
 	# prompt turns red if the previous command didn't exit with 0
-	PROMPT="%(?.%F{magenta}.%F{red})${PURE_PROMPT_SYMBOL:-❯}%f "
+
+	local coolstuff="%(?.%F{magenta}.%F{red})${PURE_PROMPT_SYMBOL:-❯}%f "
+	PROMPT="${coolstuff}"
 }
 
 prompt_pure_setup "$@"
